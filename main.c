@@ -104,7 +104,8 @@ int main(__attribute__((unused)) int argc,
 	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
-		write(STDOUT_FILENO, "$ ", 2);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "$ ", 2);
 		if (getline(&user_input, &input_size, stdin) != -1)
 		{
 			cmd = (char *)malloc(128 * sizeof(char));
