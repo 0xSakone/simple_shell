@@ -30,7 +30,7 @@ int getCommand(char *output, char *input)
 
 	while (*input != '\0')
 	{
-		if (*input == '\n')
+		if (*input == ' ' || *input == '\n')
 			break;
 		cmd[i] = *input;
 		input++;
@@ -76,7 +76,7 @@ int run(__attribute__((unused)) char *pargs,
 		free(cmd);
 		free(pargs);
 		perror(pprogram);
-		exit(1);
+		return (1);
 	}
 	else
 	{
