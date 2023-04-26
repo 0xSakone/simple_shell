@@ -42,8 +42,8 @@ int main(__attribute__((unused)) int argc,
 {
 	char *user_input, *cmd;
 	size_t input_size = 128;
-	char *const args[] = {"/bin/ls", NULL};
-	char *const envps[] = {"VAR=value", NULL};
+	char *args[] = {NULL, NULL};
+	char *const envps[] = {NULL};
 	pid_t pid;
 	int status;
 
@@ -60,6 +60,7 @@ int main(__attribute__((unused)) int argc,
 			else if (pid == 0)
 			{
 				cmd = (char *)malloc(128 * sizeof(char));
+				args[0] = cmd;
 				getCommand(cmd, user_input);
 				if (execve(cmd, args, envps) < 1)
 					perror(argv[0]);
