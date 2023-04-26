@@ -105,7 +105,7 @@ int main(__attribute__((unused)) int argc,
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, "#cisfun$ ", 9);
+			_printf("#cisfun$ ");
 
 		rivalue = getline(&user_input, &input_size, stdin);
 
@@ -117,7 +117,7 @@ int main(__attribute__((unused)) int argc,
 		else
 		{
 			free(user_input);
-			break;
+			return (-1);
 		}
 	}
 	return (0);
