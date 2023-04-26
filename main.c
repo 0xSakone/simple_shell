@@ -37,7 +37,7 @@ int getCommand(char *output, char *input)
  * Return: 0 as success
  */
 int main(__attribute__((unused)) int argc,
-	__attribute__((unused)) char *argv[],
+	char *argv[],
 	__attribute__((unused)) char *envp[])
 {
 	char *user_input, *cmd;
@@ -62,7 +62,7 @@ int main(__attribute__((unused)) int argc,
 				cmd = (char *)malloc(128 * sizeof(char));
 				getCommand(cmd, user_input);
 				if (execve(cmd, args, envps) < 1)
-					perror(cmd);
+					perror(argv[0]);
 				free(cmd);
 			}
 			else
