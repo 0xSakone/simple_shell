@@ -11,10 +11,10 @@
  */
 void prompt(int signal)
 {
-	char *new_prompt = "\n$ ";
+	char *new_prompt = "\n#cisfun$ ";
 
 	(void)signal;
-	write(STDIN_FILENO, new_prompt, 3);
+	write(STDIN_FILENO, new_prompt, 10);
 }
 
 /**
@@ -105,7 +105,7 @@ int main(__attribute__((unused)) int argc,
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, "$ ", 2);
+			write(STDOUT_FILENO, "#cisfun$ ", 9);
 		if (getline(&user_input, &input_size, stdin) != -1)
 		{
 			cmd = (char *)malloc(128 * sizeof(char));
