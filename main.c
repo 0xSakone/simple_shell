@@ -75,6 +75,7 @@ int main(__attribute__((unused)) int argc,
 		else
 		{
 			free(user_input);
+			fflush(STDIN_FILENO);
 			break;
 		}
 	}
