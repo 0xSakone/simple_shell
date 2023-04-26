@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include "head.h"
-#include "_printf/main.h"
+#include "main.h"
 
 /**
  * getCommand - function that get the command from string
