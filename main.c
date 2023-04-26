@@ -44,11 +44,13 @@ int getCommand(char *output, char *input)
  * run - execute program with args
  * @pargs: program argument
  * @envp: program environment
+ * @ret: return value
  * @pprogram: parent program name
  * Return: 0 as success
  */
 int run(__attribute__((unused)) char *pargs,
 	__attribute__((unused)) char **envp,
+	int *ret,
 	char *pprogram)
 {
 	int status;
@@ -60,7 +62,6 @@ int run(__attribute__((unused)) char *pargs,
 	if (pid == -1)
 	{
 		perror("fork");
-		perror("fork");
 		exit(1);
 	}
 	else if (pid == 0)
@@ -68,7 +69,10 @@ int run(__attribute__((unused)) char *pargs,
 		cmd = (char *)malloc((_strlen(pargs) - 1) * sizeof(char));
 		getCommand(cmd, pargs);
 		args[0] = cmd;
-		execve(cmd, args, NULL);
+		if (execve(cmd, args, NULL) < 0)
+			*ret = -1;
+		else
+			*ret = 0;
 		free(cmd);
 		free(pargs);
 		perror(pprogram);
@@ -100,6 +104,7 @@ int main(__attribute__((unused)) int argc,
 	char *user_input = NULL;
 	size_t input_size = 128;
 	int rivalue;
+	int ret = 0;
 
 	while (1)
 	{
@@ -110,14 +115,14 @@ int main(__attribute__((unused)) int argc,
 
 		if (rivalue != -1)
 		{
-			run(user_input, envp, argv[0]);
+			run(user_input, envp, &ret, argv[0]);
 			signal(SIGINT, prompt);
 		}
 		else
 		{
 			free(user_input);
-			break;
+			return (0);
 		}
 	}
-	return (0);
+	return (ret);
 }
