@@ -1,6 +1,25 @@
 #include "main.h"
 
 /**
+ * remove_hashtag - remove everything after #
+ * @buff: input;
+ * Return:void
+ */
+void remove_hashtag(char *buff)
+{
+	int i;
+
+	for (i = 0; buff[i] != '\0'; i++)
+	{
+		if (buff[i] == '#')
+		{
+			buff[i] = '\0';
+			break;
+		}
+	}
+}
+
+/**
  * string_format - string text formater
  * @count: current character count
  * @args: arguments

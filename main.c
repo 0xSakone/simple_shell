@@ -36,54 +36,51 @@ int getCommand(char *output, char *input)
 		input++;
 		i++;
 	}
-
 	_strncpy(output, (char *)&cmd, i);
 	return (1);
 }
 
 /**
  * run - execute program with args
- * @cmd: program to run
  * @pargs: program argument
  * @envp: program environment
- * @ret: return value pointer
  * @pprogram: parent program name
  * Return: 0 as success
  */
-int run(char *cmd, char *pargs, char **envp, int *ret, char *pprogram)
+int run(__attribute__((unused)) char *pargs,
+	__attribute__((unused)) char **envp,
+	char *pprogram)
 {
-	int rvalue = 0, status;
+	int status;
+	char *cmd;
 	char *args[] = {NULL, NULL};
 	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
 	{
-		perror(pprogram);
-		*ret = -1;
-		return (-1);
+		perror("fork");
+		perror("fork");
+		exit(1);
 	}
 	else if (pid == 0)
 	{
-		args[0] = (char *)malloc(sizeof(char) * _strlen(cmd));
+		cmd = (char *)malloc((_strlen(pargs) - 1) * sizeof(char));
 		getCommand(cmd, pargs);
-		rvalue = execve(cmd, args, envp);
-		free(args[0]);
-		if (rvalue < 1)
-		{
-			perror(pprogram);
-			*ret = rvalue;
-			return (-1);
-		}
-		fflush(stdin);
-		return (0);
+		args[0] = cmd;
+		execve(cmd, args, NULL);
+		free(cmd);
+		free(pargs);
+		perror(pprogram);
+		exit(1);
 	}
 	else
 	{
-		if (wait(&status) == -1)
+		if (waitpid(pid, &status, 0) == -1)
 		{
-			perror(pprogram);
-			return (-1);
+			perror("waitpid");
+			free(pargs);
+			exit(1);
 		}
 	}
 	return (0);
@@ -100,26 +97,22 @@ int main(__attribute__((unused)) int argc,
 	char *argv[],
 	char *envp[])
 {
-	char *user_input, *cmd;
+	char *user_input;
 	size_t input_size = 128;
-	int ret;
+	int rivalue;
 
 	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "#cisfun$ ", 9);
-		if (getline(&user_input, &input_size, stdin) != -1)
+
+		rivalue = getline(&user_input, &input_size, stdin);
+
+		if (rivalue != -1)
 		{
-			cmd = (char *)malloc(128 * sizeof(char));
-			if (run(cmd, user_input, envp, &ret, argv[0]) == -1)
-			{
-				free(user_input);
-				free(cmd);
-				exit(ret);
-			}
-			else
-				signal(SIGINT, prompt);
+			run(user_input, envp, argv[0]);
+			signal(SIGINT, prompt);
 		}
 		else
 		{
