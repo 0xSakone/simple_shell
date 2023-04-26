@@ -51,7 +51,7 @@ int main(__attribute__((unused)) int argc,
 	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
-		_printf("#cisfun$ ");
+		_printf("$ ");
 		if (getline(&user_input, &input_size, stdin) > 0)
 		{
 			pid = fork();
