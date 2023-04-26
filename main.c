@@ -97,11 +97,10 @@ int main(__attribute__((unused)) int argc,
 	char *argv[],
 	char *envp[])
 {
-	char *user_input;
+	char *user_input = NULL;
 	size_t input_size = 128;
 	int rivalue;
 
-	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
