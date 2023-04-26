@@ -61,8 +61,8 @@ int run(__attribute__((unused)) char *pargs,
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("fork");
-		exit(1);
+		perror("Error");
+		exit(127);
 	}
 	else if (pid == 0)
 	{
@@ -80,12 +80,7 @@ int run(__attribute__((unused)) char *pargs,
 	}
 	else
 	{
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			perror("waitpid");
-			free(pargs);
-			exit(1);
-		}
+		wait(&status);
 	}
 	return (0);
 }
