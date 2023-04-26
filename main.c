@@ -100,7 +100,6 @@ int main(__attribute__((unused)) int argc,
 	size_t input_size = 128;
 	int ret;
 
-	cmd = (char *)malloc(input_size * sizeof(char));
 	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
