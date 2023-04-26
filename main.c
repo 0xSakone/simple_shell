@@ -30,7 +30,7 @@ int getCommand(char *output, char *input)
 
 	while (*input != '\0')
 	{
-		if (*input == ' ' || *input == '\n')
+		if (*input == '\n')
 			break;
 		cmd[i] = *input;
 		input++;
@@ -121,7 +121,7 @@ int main(__attribute__((unused)) int argc,
 		else
 		{
 			free(user_input);
-			return (0);
+			break;
 		}
 	}
 	return (ret);
