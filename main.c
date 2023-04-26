@@ -58,12 +58,17 @@ int run(char *cmd, char *pargs, char **envp, int *ret, char *pprogram)
 
 	pid = fork();
 	if (pid == -1)
+	{
 		perror(pprogram);
+		*ret = -1;
+		return (-1);
+	}
 	else if (pid == 0)
 	{
-		args[0] = cmd;
+		args[0] = (char *)malloc(sizeof(char) * _strlen(cmd));
 		getCommand(cmd, pargs);
 		rvalue = execve(cmd, args, envp);
+		free(args[0]);
 		if (rvalue < 1)
 		{
 			perror(pprogram);
@@ -71,7 +76,6 @@ int run(char *cmd, char *pargs, char **envp, int *ret, char *pprogram)
 			return (-1);
 		}
 		fflush(stdin);
-		signal(SIGINT, prompt);
 		return (0);
 	}
 	else
@@ -114,6 +118,8 @@ int main(__attribute__((unused)) int argc,
 				free(cmd);
 				exit(ret);
 			}
+			else
+				signal(SIGINT, prompt);
 		}
 		else
 		{
