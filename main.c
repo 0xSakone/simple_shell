@@ -38,12 +38,11 @@ int getCommand(char *output, char *input)
  */
 int main(__attribute__((unused)) int argc,
 	char *argv[],
-	__attribute__((unused)) char *envp[])
+	char *envp[])
 {
 	char *user_input, *cmd;
 	size_t input_size = 128;
 	char *args[] = {NULL, NULL};
-	char *const envps[] = {NULL};
 	pid_t pid;
 	int status;
 
@@ -51,7 +50,7 @@ int main(__attribute__((unused)) int argc,
 	user_input = (char *)malloc(input_size * sizeof(char));
 	while (1)
 	{
-		_printf("$ ");
+		_printf("#cisfun$ ");
 		if (getline(&user_input, &input_size, stdin) > 0)
 		{
 			pid = fork();
@@ -62,7 +61,7 @@ int main(__attribute__((unused)) int argc,
 				cmd = (char *)malloc(128 * sizeof(char));
 				args[0] = cmd;
 				getCommand(cmd, user_input);
-				if (execve(cmd, args, envps) < 1)
+				if (execve(cmd, args, envp) < 1)
 					perror(argv[0]);
 				free(cmd);
 			}
