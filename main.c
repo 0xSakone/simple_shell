@@ -110,6 +110,8 @@ int main(__attribute__((unused)) int argc,
 			cmd = (char *)malloc(128 * sizeof(char));
 			if (run(cmd, user_input, envp, &ret, argv[0]) == -1)
 			{
+				free(user_input);
+				free(cmd);
 				exit(ret);
 			}
 		}
