@@ -74,7 +74,6 @@ int run(__attribute__((unused)) char *pargs,
 		args[1] = NULL;
 		rt = execve(pargs, args, NULL);
 		free(pargs);
-		free(envp);
 		free(pprogram);
 		free(args[0]);
 		if (rt == -1)
@@ -87,7 +86,6 @@ int run(__attribute__((unused)) char *pargs,
 	else
 	{
 		free(pargs);
-		free(envp);
 		free(pprogram);
 		wait(&status);
 	}
@@ -118,13 +116,11 @@ int main(__attribute__((unused))  int argc,
 		if (rivalue != -1)
 		{
 			run(user_input, NULL, &ret, argv[0]);
-			free(user_input);
 			signal(SIGINT, prompt);
 		}
 		else
 			break;
 	}
 	free(user_input);
-	free(argv);
 	return (ret);
 }
