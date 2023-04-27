@@ -62,7 +62,6 @@ int run(__attribute__((unused)) char *pargs,
 	if (pid == -1)
 	{
 		perror("Error");
-		free(pargs);
 		exit(127);
 	}
 	else if (pid == 0)
@@ -76,12 +75,12 @@ int run(__attribute__((unused)) char *pargs,
 			*ret = 0;
 		free(cmd);
 		free(pargs);
+		free(pprogram);
 		perror(pprogram);
 		return (1);
 	}
 	else
 	{
-		free(pargs);
 		wait(&status);
 	}
 	return (0);
