@@ -112,6 +112,8 @@ int main(__attribute__((unused)) int argc,
 		rivalue = getline(&user_input, &input_size, stdin);
 		if (rivalue != -1)
 		{
+			if (_strcmp(user_input, "exit\n") == 0)
+				exit(0);
 			run(user_input, &ret, argv[0]);
 			_realloc(user_input, 128, 128);
 			signal(SIGINT, prompt);
