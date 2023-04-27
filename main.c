@@ -48,7 +48,7 @@ int getCommand(char *output, char *input)
  * @pprogram: parent program name
  * Return: 0 as success
  */
-int run(__attribute__((unused)) char *pargs,
+int run(char *pargs,
 	__attribute__((unused)) char **envp,
 	int *ret,
 	char *pprogram)
@@ -76,6 +76,7 @@ int run(__attribute__((unused)) char *pargs,
 		free(cmd);
 		free(pargs);
 		free(pprogram);
+		free(envp);
 		perror(pprogram);
 		return (1);
 	}
