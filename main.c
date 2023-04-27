@@ -60,6 +60,8 @@ int run(char *pargs, char **args,
 	if (pid == -1)
 	{
 		perror("Error");
+		free(args[0]);
+		free(pargs);
 		exit(127);
 	}
 	else if (pid == 0)
@@ -76,10 +78,10 @@ int run(char *pargs, char **args,
 	}
 	else
 	{
-		free(args[0]);
-		free(pargs);
 		wait(&status);
 	}
+	free(args[0]);
+	free(pargs);
 	return (0);
 }
 
