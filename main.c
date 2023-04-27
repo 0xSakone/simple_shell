@@ -54,7 +54,7 @@ int run(__attribute__((unused)) char *pargs,
 	char *pprogram)
 {
 	int status;
-	char *cmd;
+	/* char *cmd; */
 	char *args[] = {NULL, NULL};
 	pid_t pid;
 
@@ -66,14 +66,15 @@ int run(__attribute__((unused)) char *pargs,
 	}
 	else if (pid == 0)
 	{
-		cmd = (char *)malloc((_strlen(pargs) - 1) * sizeof(char));
-		getCommand(cmd, pargs);
-		args[0] = cmd;
-		if (execve(cmd, args, NULL) < 0)
+		/* cmd = (char *)malloc(128 * sizeof(char));
+		_strncpy(cmd, pargs, _strlen(pargs) - 1);*/
+		pargs[_strlen(pargs) - 1] = '\0';
+		args[0] = pargs;
+		if (execve(pargs, args, NULL) < 0)
 			*ret = -1;
 		else
 			*ret = 0;
-		free(cmd);
+		
 		free(pargs);
 		perror(pprogram);
 		return (1);
