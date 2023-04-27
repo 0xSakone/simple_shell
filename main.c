@@ -64,6 +64,7 @@ int run(char *pargs,
 		{
 			perror("Error");
 			gridfree(args, i);
+			free(pargs);
 			exit(127);
 		}
 		else if (pid == 0)
