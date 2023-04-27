@@ -118,9 +118,9 @@ int main(__attribute__((unused)) int argc,
 		}
 		else
 		{
-			free(user_input);
 			break;
 		}
 	}
+	free(user_input);
 	return (0);
 }
