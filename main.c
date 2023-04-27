@@ -53,14 +53,17 @@ int run(__attribute__((unused)) char *pargs,
 	int *ret,
 	char *pprogram)
 {
-	int status;
+	int status, rt = 0;
 	/* char *cmd; */
-	char *args[] = {NULL, NULL};
+	char *args[2];
 	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
 	{
+		free(pargs);
+		free(envp);
+		free(pprogram);
 		perror("Error");
 		exit(127);
 	}
@@ -70,17 +73,24 @@ int run(__attribute__((unused)) char *pargs,
 		_strncpy(cmd, pargs, _strlen(pargs) - 1);*/
 		pargs[_strlen(pargs) - 1] = '\0';
 		args[0] = pargs;
-		if (execve(pargs, args, NULL) < 0)
-			*ret = -1;
-		else
-			*ret = 0;
-		
+		args[1] = NULL;
+		rt = execve(pargs, args, NULL);
 		free(pargs);
+		free(envp);
+		free(pprogram);
+		free(args[0]);
+		if (rt == -1)
+		{
+			*ret = -1;
+		}
 		perror(pprogram);
 		return (1);
 	}
 	else
 	{
+		free(pargs);
+		free(envp);
+		free(pprogram);
 		wait(&status);
 	}
 	return (0);
@@ -93,9 +103,8 @@ int run(__attribute__((unused)) char *pargs,
  * @envp: environnement variable
  * Return: 0 as success
  */
-int main(__attribute__((unused)) int argc,
-	char *argv[],
-	char *envp[])
+int main(__attribute__((unused))  int argc,
+	char *argv[])
 {
 	char *user_input = NULL;
 	size_t input_size = 128;
@@ -111,14 +120,14 @@ int main(__attribute__((unused)) int argc,
 
 		if (rivalue != -1)
 		{
-			run(user_input, envp, &ret, argv[0]);
+			run(user_input, NULL, &ret, argv[0]);
+			free(user_input);
 			signal(SIGINT, prompt);
 		}
 		else
-		{
-			free(user_input);
 			break;
-		}
 	}
+	free(user_input);
+	free(argv);
 	return (ret);
 }
