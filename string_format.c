@@ -1,22 +1,97 @@
 #include "main.h"
 
 /**
- * remove_hashtag - remove everything after #
- * @buff: input;
- * Return:void
+ * _sch - search if a char is inside a string
+ * @s: string to review
+ * @c: char to find
+ * Return: 1 if success 0 if not
  */
-void remove_hashtag(char *buff)
+int _sch(char *s, char c)
 {
-	int i;
+	int cont = 0;
 
-	for (i = 0; buff[i] != '\0'; i++)
+	while (s[cont] != '\0')
 	{
-		if (buff[i] == '#')
+		if (s[cont] == c)
 		{
-			buff[i] = '\0';
 			break;
 		}
+		cont++;
 	}
+	if (s[cont] == c)
+		return (1);
+	else
+		return (0);
+}
+/**
+ * _strtok - function that cut a string into tokens depending of the delimit
+ * @s: string to cut in parts
+ * @d: delimiters
+ * Return: first partition
+ */
+char *_strtok(char *s, char *d)
+{
+	static char *ultimo;
+	int i = 0, j = 0;
+
+	if (!s)
+		s = ultimo;
+	while (s[i] != '\0')
+	{
+		if (_sch(d, s[i]) == 0 && s[i + 1] == '\0')
+			i++;
+		else if (_sch(d, s[i]) == 0 && _sch(d, s[i + 1]) == 0)
+			i++;
+		else if (_sch(d, s[i]) == 0 && _sch(d, s[i + 1]) == 1)
+		{
+			ultimo = s + i + 1;
+			*ultimo = '\0';
+			ultimo++;
+			s = s + j;
+			return (s);
+		}
+		else if (_sch(d, s[i]) == 1)
+		{
+			j++;
+			i++;
+		}
+	}
+	return (NULL);
+}
+/**
+* _strtok2 - function tokenizaition with ;
+* @s: string to cut in parts
+* @d: delimiters
+* Return: first partition
+*/
+char *_strtok2(char *s, char *d)
+{
+	static char *ultimo;
+	int i = 0, j = 0;
+
+	if (!s)
+		s = ultimo;
+	while (s[i] != '\0')
+	{
+		if (_sch(d, s[i]) == 0 && s[i + 1] == '\0')
+			i++;
+		else if (_sch(d, s[i]) == 0 && _sch(d, s[i + 1]) == 0)
+			i++;
+		else if (_sch(d, s[i]) == 0 && _sch(d, s[i + 1]) == 1)
+		{
+			ultimo = s + i + 1;
+			*ultimo = '\0';
+			ultimo++;
+			s = s + j;
+			return (s);
+		}
+		else if (_sch(d, s[i]) == 1)
+		{
+			j++;
+			i++;
+		}
+	}
+	return (NULL);
 }
 
 /**

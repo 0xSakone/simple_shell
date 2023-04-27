@@ -50,29 +50,37 @@ int run(char *pargs,
 	int *ret,
 	char *pprogram)
 {
-	int status;
-	char *args[] = {NULL, NULL};
+	int status, i;
+	char **args = NULL;
 	pid_t pid;
 
-	pid = fork();
-	if (pid == -1)
+	args = parsing(pargs);
+	if (args)
 	{
-		perror("Error");
-		exit(127);
-	}
-	else if (pid == 0)
-	{
-		_strncpy(args[0], pargs, _strlen(pargs) - 1);
-		if (execve(args[0], args, NULL) < 0)
-			*ret = -1;
+		for (i = 0; args[i] != NULL; i++)
+			;
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("Error");
+			exit(127);
+		}
+		else if (pid == 0)
+		{
+			_strncpy(args[0], pargs, _strlen(pargs) - 1);
+			if (execve(args[0], args, NULL) < 0)
+				*ret = -1;
+			else
+				*ret = 0;
+			free(pargs);
+			perror(pprogram);
+			exit(127);
+		}
 		else
-			*ret = 0;
-		free(pargs);
-		perror(pprogram);
-		exit(127);
+			wait(&status);
+
+		gridfree(args, i);
 	}
-	else
-		wait(&status);
 
 	return (0);
 }
@@ -89,7 +97,6 @@ int main(__attribute__((unused)) int argc,
 	__attribute__((unused)) char *envp[])
 {
 	char *user_input = (char *)malloc(128 * sizeof(char));
-	char *args[2];
 	size_t input_size = 128;
 	int rivalue;
 	int ret = 0;
@@ -99,12 +106,11 @@ int main(__attribute__((unused)) int argc,
 		if (isatty(STDIN_FILENO))
 			_printf("#cisfun$ ");
 
-		_realloc(user_input, 128, 128);
 		rivalue = getline(&user_input, &input_size, stdin);
 		if (rivalue != -1)
 		{
 			run(user_input, &ret, argv[0]);
-			free(user_input);
+			_realloc(user_input, 128, 128);
 			signal(SIGINT, prompt);
 		}
 		else

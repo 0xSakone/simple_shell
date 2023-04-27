@@ -52,6 +52,8 @@ int base_format(unsigned int number, int base, int uppercase);
  */
 int string_format(int *count, va_list args);
 int big_string_format(int *count, va_list args);
+char *_strtok(char *s, char *d);
+char **parsing(char *line);
 
 int _printf(const char * const format, ...);
 int _strlen(char *s);
@@ -61,5 +63,6 @@ int _strlen(char *s);
  */
 void *_calloc(unsigned int nume, unsigned int size);
 void *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
+void gridfree(char **grid, int height);
 
 #endif
