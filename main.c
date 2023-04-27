@@ -53,8 +53,8 @@ int run(__attribute__((unused)) char *pargs,
 	int *ret,
 	char *pprogram)
 {
-	int status, rt = 0;
-	/* char *cmd; */
+	int status;
+	char *cmd;
 	char *args[] = {NULL, NULL};
 	pid_t pid;
 
@@ -66,17 +66,15 @@ int run(__attribute__((unused)) char *pargs,
 	}
 	else if (pid == 0)
 	{
-		cmd = (char *)malloc(128 * sizeof(char));
-		_strncpy(cmd, pargs, _strlen(pargs) - 1);
-		pargs[_strlen(pargs) - 1] = '\0';
-		args[0] = pargs;
-		rt = execve(pargs, args, NULL);
-		if (rt == -1)
-		{
+		cmd = (char *)malloc((_strlen(pargs) - 1) * sizeof(char));
+		getCommand(cmd, pargs);
+		args[0] = cmd;
+		if (execve(cmd, args, NULL) < 0)
 			*ret = -1;
-		}
-		free(pargs);
+		else
+			*ret = 0;
 		free(cmd);
+		free(pargs);
 		perror(pprogram);
 		return (1);
 	}
@@ -94,9 +92,9 @@ int run(__attribute__((unused)) char *pargs,
  * @envp: environnement variable
  * Return: 0 as success
  */
-int main(__attribute__((unused))  int argc,
+int main(__attribute__((unused)) int argc,
 	char *argv[],
-	__attribute__((unused)) char *envp[])
+	char *envp[])
 {
 	char *user_input = NULL;
 	size_t input_size = 128;
@@ -112,8 +110,7 @@ int main(__attribute__((unused))  int argc,
 
 		if (rivalue != -1)
 		{
-			run(user_input, NULL, &ret, argv[0]);
-			free(user_input);
+			run(user_input, envp, &ret, argv[0]);
 			signal(SIGINT, prompt);
 		}
 		else
