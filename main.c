@@ -75,13 +75,13 @@ int run(char *pargs,
 			else
 				*ret = 0;
 			free(pargs);
+			gridfree(args, i);
 			perror(pprogram);
 			exit(127);
 		}
 		else
 			wait(&status);
 
-		gridfree(args, i);
 	}
 
 	return (0);
