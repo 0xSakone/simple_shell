@@ -69,8 +69,6 @@ int run(__attribute__((unused)) char *pargs,
 	}
 	else if (pid == 0)
 	{
-		/* cmd = (char *)malloc(128 * sizeof(char));
-		_strncpy(cmd, pargs, _strlen(pargs) - 1);*/
 		pargs[_strlen(pargs) - 1] = '\0';
 		args[0] = pargs;
 		args[1] = NULL;
@@ -100,7 +98,6 @@ int run(__attribute__((unused)) char *pargs,
  * main - entry function
  * @argc: number of argument passed to the programm
  * @argv: arguments passed
- * @envp: environnement variable
  * Return: 0 as success
  */
 int main(__attribute__((unused))  int argc,
