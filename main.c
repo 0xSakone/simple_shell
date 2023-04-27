@@ -55,38 +55,32 @@ int run(__attribute__((unused)) char *pargs,
 {
 	int status, rt = 0;
 	/* char *cmd; */
-	char *args[2];
+	char *args[] = {NULL, NULL};
 	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
 	{
-		free(pargs);
-		free(envp);
-		free(pprogram);
 		perror("Error");
 		exit(127);
 	}
 	else if (pid == 0)
 	{
+		/* cmd = (char *)malloc(128 * sizeof(char));
+		_strncpy(cmd, pargs, _strlen(pargs) - 1);*/
 		pargs[_strlen(pargs) - 1] = '\0';
 		args[0] = pargs;
-		args[1] = NULL;
 		rt = execve(pargs, args, NULL);
-		free(pargs);
-		free(pprogram);
-		free(args[0]);
 		if (rt == -1)
 		{
 			*ret = -1;
 		}
+		free(pargs);
 		perror(pprogram);
 		return (1);
 	}
 	else
 	{
-		free(pargs);
-		free(pprogram);
 		wait(&status);
 	}
 	return (0);
@@ -96,10 +90,12 @@ int run(__attribute__((unused)) char *pargs,
  * main - entry function
  * @argc: number of argument passed to the programm
  * @argv: arguments passed
+ * @envp: environnement variable
  * Return: 0 as success
  */
 int main(__attribute__((unused))  int argc,
-	char *argv[])
+	char *argv[],
+	__attribute__((unused)) char *envp[])
 {
 	char *user_input = NULL;
 	size_t input_size = 128;
@@ -116,11 +112,14 @@ int main(__attribute__((unused))  int argc,
 		if (rivalue != -1)
 		{
 			run(user_input, NULL, &ret, argv[0]);
+			free(user_input);
 			signal(SIGINT, prompt);
 		}
 		else
+		{
+			free(user_input);
 			break;
+		}
 	}
-	free(user_input);
 	return (ret);
 }
