@@ -66,8 +66,8 @@ int run(__attribute__((unused)) char *pargs,
 	}
 	else if (pid == 0)
 	{
-		/* cmd = (char *)malloc(128 * sizeof(char));
-		_strncpy(cmd, pargs, _strlen(pargs) - 1);*/
+		cmd = (char *)malloc(128 * sizeof(char));
+		_strncpy(cmd, pargs, _strlen(pargs) - 1);
 		pargs[_strlen(pargs) - 1] = '\0';
 		args[0] = pargs;
 		rt = execve(pargs, args, NULL);
@@ -76,6 +76,7 @@ int run(__attribute__((unused)) char *pargs,
 			*ret = -1;
 		}
 		free(pargs);
+		free(cmd);
 		perror(pprogram);
 		return (1);
 	}
