@@ -42,16 +42,16 @@ int getCommand(char *output, char *input)
 /**
  * run - execute program with args
  * @pargs: program argument
- * @args: program environment
  * @ret: return value
  * @pprogram: parent program name
  * Return: 0 as success
  */
-int run(char *pargs, char **args,
+int run(char *pargs,
 	int *ret,
 	char *pprogram)
 {
 	int status;
+	char *args[] = {NULL, NULL};
 	pid_t pid;
 
 	pid = fork();
@@ -62,14 +62,11 @@ int run(char *pargs, char **args,
 	}
 	else if (pid == 0)
 	{
-		args[0] = (char *)malloc(128 * sizeof(char));
-		args[1] = NULL;
 		_strncpy(args[0], pargs, _strlen(pargs) - 1);
 		if (execve(args[0], args, NULL) < 0)
 			*ret = -1;
 		else
 			*ret = 0;
-		free(args[0]);
 		free(pargs);
 		perror(pprogram);
 		exit(127);
@@ -106,7 +103,7 @@ int main(__attribute__((unused)) int argc,
 		rivalue = getline(&user_input, &input_size, stdin);
 		if (rivalue != -1)
 		{
-			run(user_input, args, &ret, argv[0]);
+			run(user_input, &ret, argv[0]);
 			free(user_input);
 			signal(SIGINT, prompt);
 		}
