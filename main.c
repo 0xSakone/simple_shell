@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <sys/wait.h>
 #include "head.h"
 #include "main.h"
@@ -43,21 +42,20 @@ int getCommand(char *output, char *input)
 /**
  * run - execute program with args
  * @pargs: program argument
- * @envp: program environment
+ * @args: program environment
  * @ret: return value
  * @pprogram: parent program name
  * Return: 0 as success
  */
-int run(char *pargs,
-	__attribute__((unused)) char **envp,
+int run(char *pargs, char **args,
 	int *ret,
 	char *pprogram)
 {
 	int status;
-	char *cmd;
-	char *args[] = {NULL, NULL};
 	pid_t pid;
 
+	args[0] = (char *)malloc(128 * sizeof(char));
+	args[1] = NULL;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -66,22 +64,20 @@ int run(char *pargs,
 	}
 	else if (pid == 0)
 	{
-		cmd = (char *)malloc((_strlen(pargs) - 1) * sizeof(char));
-		getCommand(cmd, pargs);
-		args[0] = cmd;
-		if (execve(cmd, args, NULL) < 0)
+		_strncpy(args[0], pargs, _strlen(pargs) - 1);
+		if (execve(args[0], args, NULL) < 0)
 			*ret = -1;
 		else
 			*ret = 0;
-		free(cmd);
+		free(args[0]);
 		free(pargs);
-		free(pprogram);
-		free(envp);
 		perror(pprogram);
 		return (1);
 	}
 	else
 	{
+		free(args[0]);
+		free(pargs);
 		wait(&status);
 	}
 	return (0);
@@ -96,9 +92,10 @@ int run(char *pargs,
  */
 int main(__attribute__((unused)) int argc,
 	char *argv[],
-	char *envp[])
+	__attribute__((unused)) char *envp[])
 {
-	char *user_input = NULL;
+	char *user_input = (char *)malloc(128 * sizeof(char));
+	char *args[2];
 	size_t input_size = 128;
 	int rivalue;
 	int ret = 0;
@@ -108,11 +105,12 @@ int main(__attribute__((unused)) int argc,
 		if (isatty(STDIN_FILENO))
 			_printf("#cisfun$ ");
 
+		_realloc(user_input, 128, 128);
 		rivalue = getline(&user_input, &input_size, stdin);
-
 		if (rivalue != -1)
 		{
-			run(user_input, envp, &ret, argv[0]);
+			run(user_input, args, &ret, argv[0]);
+			free(user_input);
 			signal(SIGINT, prompt);
 		}
 		else
@@ -121,5 +119,5 @@ int main(__attribute__((unused)) int argc,
 			break;
 		}
 	}
-	return (ret);
+	return (0);
 }

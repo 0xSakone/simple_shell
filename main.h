@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
 
 /*
  * typedef caller - Type de pointeur de fonction
@@ -55,5 +56,10 @@ int big_string_format(int *count, va_list args);
 int _printf(const char * const format, ...);
 int _strlen(char *s);
 
+/*
+ * Memory
+ */
+void *_calloc(unsigned int nume, unsigned int size);
+void *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
 
 #endif
