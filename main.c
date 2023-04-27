@@ -54,8 +54,6 @@ int run(char *pargs, char **args,
 	int status;
 	pid_t pid;
 
-	args[0] = (char *)malloc(128 * sizeof(char));
-	args[1] = NULL;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -66,6 +64,8 @@ int run(char *pargs, char **args,
 	}
 	else if (pid == 0)
 	{
+		args[0] = (char *)malloc(128 * sizeof(char));
+		args[1] = NULL;
 		_strncpy(args[0], pargs, _strlen(pargs) - 1);
 		if (execve(args[0], args, NULL) < 0)
 			*ret = -1;
@@ -74,14 +74,11 @@ int run(char *pargs, char **args,
 		free(args[0]);
 		free(pargs);
 		perror(pprogram);
-		return (1);
+		exit(127);
 	}
 	else
-	{
 		wait(&status);
-	}
-	free(args[0]);
-	free(pargs);
+
 	return (0);
 }
 
