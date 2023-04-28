@@ -112,7 +112,7 @@ int main(__attribute__((unused)) int argc,
 		rivalue = getline(&user_input, &input_size, stdin);
 		if (rivalue != -1)
 		{
-			if (_strcmp(user_input, "exit\n") == 0)
+			if (_checkExit(user_input) == 1)
 			{
 				free(user_input);
 				_exit(0);
