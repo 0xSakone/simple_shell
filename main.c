@@ -115,7 +115,7 @@ int main(__attribute__((unused)) int argc,
 			if (_checkExit(user_input) == 1)
 			{
 				free(user_input);
-				_exit(0);
+				_exit(98);
 			}
 			run(user_input, &ret, argv[0]);
 			_realloc(user_input, 128, 128);
